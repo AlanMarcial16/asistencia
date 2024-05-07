@@ -196,10 +196,16 @@ document.getElementById('asistencia-form').addEventListener('submit', function(e
     // Verificamos la contraseña
     var contrasena = document.getElementById('contrasena').value;
     if (contrasena === 'password123') { // Aquí deberías tener una forma segura de verificar la contraseña
-        // Mostrar mensaje de éxito con retraso
+        // Obtener el nombre del empleado seleccionado
+        var empleado = document.getElementById('nombre').options[document.getElementById('nombre').selectedIndex].text;
+        // Obtener la hora de entrada seleccionada
+        var horaEntrada = document.getElementById('hora_entrada').value;
+        
+        // Mostrar mensaje de éxito con el nombre del empleado y la hora de entrada
         Swal.fire({
             icon: 'success',
             title: 'Asistencia registrada',
+            html: '<span style="font-size: 24px;">Empleado: ' + empleado + '</span><br><span style="font-size: 24px;">Hora: ' + horaEntrada + '</span>',
             showConfirmButton: false,
             timer: 1500 // Cambia el valor del temporizador según tu preferencia
         }).then(function() {
