@@ -19,15 +19,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Conexión fallida: " . $conn->connect_error);
     }
 
-    // Insertar el nuevo registro de asistencia
-    $sql = "INSERT INTO registros_asistencia (id_empleado, fecha, hora_entrada) VALUES ('$id_empleado', '$fecha', '$hora_entrada')";
+    // Verificar si ya existe un registro para este empleado en la fecha actual
+    $sql_check = "SELECT * FROM registros_asistencia WHERE id_empleado = '$id_empleado' AND fecha = '$fecha'";
+    $result_check = $conn->query($sql_check);
 
-    if ($conn->query($sql) === TRUE) {
-        // Redireccionar a form.php
-        header("Location: form.php");
-        exit(); // Asegurarse de que el script no continúe ejecutándose después de la redirección
+    if ($result_check->num_rows > 0) {
+        // Ya hay un registro para este empleado en la fecha actual
+        echo "Ya existe un registro de asistencia para este empleado en la fecha actual.";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        // Insertar el nuevo registro de asistencia
+        $sql_insert = "INSERT INTO registros_asistencia (id_empleado, fecha, hora_entrada) VALUES ('$id_empleado', '$fecha', '$hora_entrada')";
+        
+        if ($conn->query($sql_insert) === TRUE) {
+            // Redireccionar a form.php
+            header("Location: form.php");
+            exit(); // Asegurarse de que el script no continúe ejecutándose después de la redirección
+        } else {
+            echo "Error: " . $sql_insert . "<br>" . $conn->error;
+        }
     }
 
     // Cerrar la conexión
