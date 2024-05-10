@@ -32,7 +32,7 @@ if (isset($_GET["id"]) && isset($_GET["fecha"]) && isset($_GET["hora"])) {
         
         if ($conn->query($sql_insert) === TRUE) {
             // Redireccionar a form.php
-            header("Location: escanear.php");
+            header("Location: entrada_opc.php");
             exit(); // Asegurarse de que el script no continúe ejecutándose después de la redirección
         } else {
             echo "Error: " . $sql_insert . "<br>" . $conn->error;

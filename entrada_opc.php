@@ -95,10 +95,10 @@
         <img src="https://static.wixstatic.com/media/9ed84f_e9388ac15d374e77aa9c89cdb80e014a~mv2.png" alt="Logo">
     </div>
     <div class="form-container">
-        <h1>Registro de Asistencia</h1>
+        <h1>Registro de Asistencia - Entrada</h1>
         <div class="button-container">
-            <button class="button primary" onclick="location.href='entrada_opc.php';">Registro de Entrada</button>
-            <button class="button secondary" onclick="location.href='salida_opc.php';">Registro de Salida</button>
+            <button class="button primary" onclick="location.href='escanear.php';">Registro con QR</button>
+            <button class="button secondary" onclick="location.href='form.php';">Registro con Formulario</button>
         </div>
     </div>
 </div>
