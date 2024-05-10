@@ -100,6 +100,10 @@
             <button class="button primary" onclick="location.href='escanear.php';">Registro con QR</button>
             <button class="button secondary" onclick="location.href='form.php';">Registro con Formulario</button>
         </div>
+        <br><br>
+        <div class="button-container">
+            <button class="button secondary" onclick="location.href='index.php';">Volver a Inicio</button>
+        </div>
     </div>
 </div>
 

@@ -169,7 +169,7 @@
             <input type="submit" value="Registrar Asistencia">
         </form>
         <div class="button-container">
-            <button class="button secondary" onclick="location.href='index.php';">Volver a Inicio</button>
+            <button class="button secondary" onclick="location.href='entrada_opc.php';">Regresar</button>
         </div>
     </div>
 </div>
