@@ -97,7 +97,7 @@
     <div class="form-container">
         <h1>Registro de Asistencia - Salida</h1>
         <div class="button-container">
-            <button class="button primary" onclick="location.href='escanear.php';">Registro con QR</button>
+            <button class="button primary" onclick="location.href='escanear_s.php';">Registro con QR</button>
             <button class="button secondary" onclick="location.href='form2.php';">Registro con Formulario</button>
         </div>
         <br><br>
