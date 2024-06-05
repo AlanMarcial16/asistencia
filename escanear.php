@@ -6,6 +6,8 @@
     <title>Escaneo de Código QR</title>
     <!-- Agrega la biblioteca Instascan -->
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <!-- Agrega la biblioteca SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -20,20 +22,44 @@
     let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
     scanner.addListener('scan', function (content) {
         var empleadoId = content; // El contenido del código QR es el ID del empleado
-var currentDate = new Date();
-var year = currentDate.getFullYear();
-var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Agrega un cero delante si el mes es de un solo dígito
-var day = ('0' + currentDate.getDate()).slice(-2); // Agrega un cero delante si el día es de un solo dígito
-var hour = ('0' + currentDate.getHours()).slice(-2); // Agrega un cero delante si la hora es de un solo dígito
-var minute = ('0' + currentDate.getMinutes()).slice(-2); // Agrega un cero delante si el minuto es de un solo dígito
-var second = ('0' + currentDate.getSeconds()).slice(-2); // Agrega un cero delante si el segundo es de un solo dígito
-var formattedDate = year + '-' + month + '-' + day; // Formato YYYY-MM-DD
-var formattedTime = hour + ':' + minute + ':' + second; // Formato HH:MM:SS
-// Redirigir a la página de registro de asistencia con el ID del empleado, la fecha y la hora actuales
-window.location.href = 'http://localhost/asistencia/registrar_asistencia2.php?id=' + empleadoId + '&fecha=' + formattedDate + '&hora=' + formattedTime;
-// Mostrar alerta de registro exitoso
-alert("Registro exitoso");
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Agrega un cero delante si el mes es de un solo dígito
+        var day = ('0' + currentDate.getDate()).slice(-2); // Agrega un cero delante si el día es de un solo dígito
+        var hour = ('0' + currentDate.getHours()).slice(-2); // Agrega un cero delante si la hora es de un solo dígito
+        var minute = ('0' + currentDate.getMinutes()).slice(-2); // Agrega un cero delante si el minuto es de un solo dígito
+        var second = ('0' + currentDate.getSeconds()).slice(-2); // Agrega un cero delante si el segundo es de un solo dígito
+        var formattedDate = year + '-' + month + '-' + day; // Formato YYYY-MM-DD
+        var formattedTime = hour + ':' + minute + ':' + second; // Formato HH:MM:SS
 
+        // Hacer una solicitud al servidor para obtener el nombre del empleado
+        fetch('obtenerEmpleado.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                id: empleadoId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            var nombreEmpleado = data.nombre;
+
+            // Mostrar alerta de registro exitoso usando SweetAlert y redirigir después de 3 segundos
+            Swal.fire({
+                title: 'Registro Exitoso',
+                html: `El registro de asistencia ha sido exitoso.<br>Empleado: <strong>${nombreEmpleado}</strong>`,
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 3000,
+                willClose: () => {
+                    // Redirigir a la página de registro de asistencia con el ID del empleado, la fecha y la hora actuales
+                    window.location.href = 'http://localhost/asistencia/registrar_asistencia2.php?id=' + empleadoId + '&fecha=' + formattedDate + '&hora=' + formattedTime;
+                }
+            });
+        })
+        .catch(error => console.error('Error al obtener el nombre del empleado:', error));
     });
 
     // Inicia el escaneo de códigos QR
@@ -47,8 +73,6 @@ alert("Registro exitoso");
         console.error(e);
     });
 </script>
-
-
 
 </body>
 </html>

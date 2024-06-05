@@ -6,6 +6,8 @@
     <title>Escaneo de Código QR</title>
     <!-- Agrega la biblioteca Instascan -->
     <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <!-- Agrega la biblioteca SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -25,23 +27,79 @@
         var formattedDate = currentDate.toISOString().slice(0, 10);
         var formattedTime = ('0' + currentDate.getHours()).slice(-2) + ':' + ('0' + currentDate.getMinutes()).slice(-2) + ':' + ('0' + currentDate.getSeconds()).slice(-2);
         
-        // Conectar a la base de datos
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText); // Muestra la respuesta del servidor en la consola
-                // Mostrar mensaje de éxito o error según la respuesta del servidor
-                if (this.responseText === 'success') {
-                    alert('Registro de salida exitoso');
-                    window.location.href = 'salida_opc.php';
-                } else {
-                    alert('Error al registrar la salida: ' + this.responseText);
-                }
+        // Hacer una solicitud al servidor para obtener el nombre del empleado
+        fetch('obtenerEmpleado.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                id: empleadoId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
             }
-        };
-        xhttp.open("POST", "registrar_salida2.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("id=" + empleadoId + "&fecha=" + formattedDate + "&hora=" + formattedTime);
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            var nombreEmpleado = data.nombre;
+
+            // Enviar la solicitud para registrar la salida
+            fetch('registrar_salida2.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    id: empleadoId,
+                    fecha: formattedDate,
+                    hora: formattedTime
+                })
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'success') {
+                    // Mostrar alerta de registro exitoso usando SweetAlert y redirigir después de 3 segundos
+                    Swal.fire({
+                        title: 'Registro Exitoso',
+                        html: `El registro de salida ha sido exitoso.<br>Empleado: <strong>${nombreEmpleado}</strong>`,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        willClose: () => {
+                            // Redirigir a la página de salida después de 3 segundos
+                            window.location.href = 'salida_opc.php';
+                        }
+                    });
+                } else {
+                    throw new Error(result);
+                }
+            })
+            .catch(error => {
+                console.error('Error al registrar la salida:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al registrar la salida: ' + error.message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener el nombre del empleado:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al obtener el nombre del empleado: ' + error.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
     });
 
     // Inicia el escaneo de códigos QR
