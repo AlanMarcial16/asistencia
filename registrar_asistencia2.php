@@ -27,8 +27,17 @@ if (isset($_GET["id"]) && isset($_GET["fecha"]) && isset($_GET["hora"])) {
         // Ya hay un registro para este empleado en la fecha actual
         echo "Ya existe un registro de asistencia para este empleado en la fecha actual.";
     } else {
+        // Verificar si la entrada es tardía
+        $entrada_timestamp = strtotime($hora_entrada);
+        $minutos_transcurridos = date('i', $entrada_timestamp);
+        $info = NULL;
+
+        if ($minutos_transcurridos > 15) {
+            $info = "entrada tardía";
+        }
+
         // Insertar el nuevo registro de asistencia
-        $sql_insert = "INSERT INTO registros_asistencia (id_empleado, fecha, hora_entrada) VALUES ('$id_empleado', '$fecha', '$hora_entrada')";
+        $sql_insert = "INSERT INTO registros_asistencia (id_empleado, fecha, hora_entrada, info) VALUES ('$id_empleado', '$fecha', '$hora_entrada', '$info')";
         
         if ($conn->query($sql_insert) === TRUE) {
             // Redireccionar a form.php

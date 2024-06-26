@@ -16,7 +16,7 @@ if ($conn->connect_error) {
 }
 
 // Obtener registros donde no se ha registrado la salida y calcular la hora de salida automática
-$sql = "SELECT id, id_empleado, fecha, hora_entrada FROM registros_asistencia WHERE hora_salida IS NULL";
+$sql = "SELECT id, id_empleado, fecha, hora_entrada, info FROM registros_asistencia WHERE hora_salida IS NULL";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -25,6 +25,7 @@ if ($result->num_rows > 0) {
         $id_empleado = $row['id_empleado'];
         $fecha = $row['fecha'];
         $hora_entrada = $row['hora_entrada'];
+        $info_actual = $row['info'];
 
         // Calcular la hora de salida esperada (hora de entrada + 8 horas + 15 minutos)
         $entrada_timestamp = strtotime($hora_entrada);
@@ -39,8 +40,16 @@ if ($result->num_rows > 0) {
 
         // Verificar si la hora actual es mayor o igual a la hora de salida esperada
         if ($hora_actual >= $salida_esperada) {
-            // Realizar el registro automático de salida
-            $sql_update = "UPDATE registros_asistencia SET hora_salida = '$hora_actual' WHERE id = $id_registro";
+            // Preparar el nuevo valor de la columna info
+            $nuevo_info = "salida tardía AUTOMÁTICA";
+            if ($info_actual) {
+                $info_actual .= ", " . $nuevo_info;
+            } else {
+                $info_actual = $nuevo_info;
+            }
+
+            // Realizar el registro automático de salida y actualizar la columna info
+            $sql_update = "UPDATE registros_asistencia SET hora_salida = '$hora_actual', info = '$info_actual' WHERE id = $id_registro";
             if ($conn->query($sql_update) === TRUE) {
                 echo "Se ha registrado automáticamente la salida para el empleado con ID $id_empleado en la fecha $fecha a las $hora_actual.";
                 
