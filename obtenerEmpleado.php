@@ -17,19 +17,29 @@ if ($conn->connect_error) {
 
 $empleadoId = $_POST['id'];
 
+// Consultar el nombre del empleado
 $sql = "SELECT nombre FROM empleados WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $empleadoId);
 $stmt->execute();
 $stmt->bind_result($nombre);
 $stmt->fetch();
+$stmt->close();
 
 if ($nombre) {
-    echo json_encode(['nombre' => $nombre]);
+    // Contar los retardos del empleado
+    $sql = "SELECT COUNT(*) as retardos FROM registros_asistencia WHERE id_empleado = ? AND info LIKE '%entrada tardía%'";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $empleadoId);
+    $stmt->execute();
+    $stmt->bind_result($retardos);
+    $stmt->fetch();
+    $stmt->close();
+
+    echo json_encode(['nombre' => $nombre, 'retardos' => $retardos]);
 } else {
     echo json_encode(['error' => 'Empleado no encontrado']);
 }
 
-$stmt->close();
 $conn->close();
 ?>

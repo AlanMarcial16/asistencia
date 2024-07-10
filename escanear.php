@@ -32,7 +32,7 @@
         var formattedDate = year + '-' + month + '-' + day; // Formato YYYY-MM-DD
         var formattedTime = hour + ':' + minute + ':' + second; // Formato HH:MM:SS
 
-        // Hacer una solicitud al servidor para obtener el nombre del empleado
+        // Hacer una solicitud al servidor para obtener el nombre del empleado y los retardos
         fetch('obtenerEmpleado.php', {
             method: 'POST',
             headers: {
@@ -44,12 +44,23 @@
         })
         .then(response => response.json())
         .then(data => {
+            if (data.error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.error,
+                    icon: 'error'
+                });
+                return;
+            }
+
             var nombreEmpleado = data.nombre;
+            var retardos = data.retardos;
+            var retardosHtml = `<span style="color: ${retardos >= 1 ? 'red' : 'green'};">RETARDOS: ${retardos}</span>`;
 
             // Mostrar alerta de registro exitoso usando SweetAlert y redirigir después de 3 segundos
             Swal.fire({
                 title: 'Registro Exitoso',
-                html: `El registro de asistencia ha sido exitoso.<br>Empleado: <strong>${nombreEmpleado}</strong>`,
+                html: `El registro de asistencia ha sido exitoso.<br>Empleado: <strong>${nombreEmpleado}</strong><br>${retardosHtml}`,
                 icon: 'success',
                 showConfirmButton: false,
                 timer: 3000,
