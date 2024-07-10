@@ -23,53 +23,43 @@
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 1000px; /* Ajustamos el ancho máximo */
-            display: flex;
-            overflow: hidden;
+            max-width: 1000px;
             padding: 20px;
-        }
-
-        .logo-container {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-container img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .form-container {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .form-container h1 {
             text-align: center;
+        }
+
+        .header {
             margin-bottom: 20px;
         }
 
-        .button-container {
+        .logo {
+            max-width: 100%;
+        }
+
+        .content {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            margin-top: 20px;
+        }
+
+        .section {
+            flex: 1;
+            text-align: center;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
         }
 
         .button {
-            padding: 15px 30px;
-            margin: 0 10px;
+            padding: 20px;
+            margin: 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 18px;
             cursor: pointer;
             transition: background-color 0.3s;
+            width: 80%;
         }
 
         .button.primary {
@@ -77,30 +67,48 @@
             color: white;
         }
 
+        .button.primary:hover {
+            background-color: #45a049;
+        }
+
         .button.secondary {
-            background-color: #008CBA;
+            background-color: #ffc107;
             color: white;
         }
 
-        .button:hover {
-            background-color: #45a049;
+        .button.secondary:hover {
+            background-color: #e0a800;
+        }
+
+        .logo-container {
+            flex: 0 1 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo-container">
-        <!-- Añadimos un elemento img dentro del contenedor -->
-        <img src="https://static.wixstatic.com/media/9ed84f_e9388ac15d374e77aa9c89cdb80e014a~mv2.png" alt="Logo">
-    </div>
-    <div class="form-container">
+    <div class="header">
         <h1>Registro de Asistencia</h1>
-        <div class="button-container">
-            <button class="button primary" onclick="location.href='entrada_opc.php';">Registro de Entrada</button>
-            <button class="button secondary" onclick="location.href='salida_opc.php';">Registro de Salida</button>
+    </div>
+    <br><br>
+    <div class="content">
+        <div class="section">
+            <h2>Entrada</h2>
+            <button class="button primary" onclick="location.href='entrada_opc.php';">Registrar Entrada</button>
+        </div>
+        <div class="logo-container">
+            <img class="logo" src="https://static.wixstatic.com/media/9ed84f_e9388ac15d374e77aa9c89cdb80e014a~mv2.png" alt="Logo">
+        </div>
+        <div class="section">
+            <h2>Salida</h2>
+            <button class="button secondary" onclick="location.href='salida_opc.php';">Registrar Salida</button>
         </div>
     </div>
+    <br><br>
 </div>
 
 </body>

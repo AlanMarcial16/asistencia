@@ -74,7 +74,7 @@
                         timer: 3000,
                         willClose: () => {
                             // Redirigir a la página de salida después de 3 segundos
-                            window.location.href = 'salida_opc.php';
+                            window.location.href = 'index.php';
                         }
                     });
                 } else {
